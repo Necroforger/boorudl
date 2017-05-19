@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 // Endpoint constants for danbooru
@@ -69,11 +68,6 @@ type DanbooruPost struct {
 	PreviewFileURL      string      `json:"preview_file_url"`
 }
 
-// Danbooru obtains image results from danbooru
-type Danbooru struct {
-	client *http.Client
-}
-
 // NewDanbooru returns a pointer to new Danbooru struct
 func NewDanbooru() *Danbooru {
 	return &Danbooru{
@@ -82,10 +76,16 @@ func NewDanbooru() *Danbooru {
 }
 
 func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) string {
-	return EndpointDanbooruPosts + "?" +
+
+	rand := "false"
+	if random {
+		rand = "true"
+	}
+
+	return EndpointDanbooruPosts +
 		fmt.Sprintf(
-			"limit=%d&page=%d&random=%s&tags=%s",
-			limit, page, strings.ToLower(fmt.Sprint(random)), url.QueryEscape(tags),
+			"?limit=%d&page=%d&random=%s&tags=%s",
+			limit, page, rand, url.QueryEscape(tags),
 		)
 }
 
