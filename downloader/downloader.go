@@ -69,8 +69,19 @@ func Search(URL string, q SearchQuery) ([]*SearchResult, error) {
 		return nil, err
 	}
 
-	var s Searcher
+	s := SearcherFromURL(u)
 
+	res, err := s.Search(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// SearcherFromURL returns a booru searcher from a hostname
+func SearcherFromURL(u *url.URL) Searcher {
+	var s Searcher
 	// Check for custom downloaders, if not, use the generic booru searcher.
 	switch u.Host {
 	case "danbooru.donmai.us":
@@ -79,10 +90,5 @@ func Search(URL string, q SearchQuery) ([]*SearchResult, error) {
 		s = NewGenericBooru(&http.Client{}, u.String(), 100)
 	}
 
-	res, err := s.Search(q)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s
 }
