@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"flag"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -53,12 +55,58 @@ func ParseFlags() {
 	if len(os.Args) < 3 {
 		fmt.Fprintln(os.Stderr, "usage: boorudl [booru site] [flags]")
 		flagset.PrintDefaults()
-		os.Exit(1)
+		SetFromUserInput()
+		return
 	}
 
 	BooruURL = os.Args[1]
 
 	flagset.Parse(os.Args[2:])
+}
+
+// RequestInput requests input from the user
+func RequestInput(query string) (string, error) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println(query)
+	fmt.Print(">")
+
+	res, err := reader.ReadString('\n')
+	if err != nil {
+		return "", err
+	}
+
+	res = strings.Replace(res, "\n", "", -1)
+	res = strings.Replace(res, "\r", "", -1)
+
+	return res, nil
+}
+
+// SetFromUserInput asks the user to enter fields if no arguments to boorudl have been provided
+func SetFromUserInput() {
+	// var err error
+
+	BooruURL, _ = RequestInput("Booru URL: ")
+	Tags, _ = RequestInput("Tags: ")
+
+	limitstr, err := RequestInput("limit: default(1)")
+	if err == nil {
+		if n, err := strconv.Atoi(limitstr); err == nil {
+			Limit = n
+		} else {
+			Limit = 1
+		}
+	}
+
+	pagestr, err := RequestInput("page number: default(0)")
+	if err == nil {
+		if n, err := strconv.Atoi(pagestr); err == nil {
+			Page = n
+		} else {
+			Page = 0
+		}
+	}
+
+	OutputDir, _ = RequestInput("Output directory: (default is the current console directory")
 }
 
 func main() {
