@@ -8,13 +8,22 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
+	"time"
 
 	"github.com/Necroforger/Boorudl/downloader"
+	httpclient "github.com/mreiferson/go-httpclient"
 )
 
 var flagset = flag.NewFlagSet("Boorudl", flag.ExitOnError)
+
+// Create an http client with a five second timeout on reads.
+// The timer will reset every time data is received.
+var client = http.Client{Transport: &httpclient.Transport{
+	ConnectTimeout:        time.Second * 10,
+	ReadWriteTimeout:      time.Second * 5,
+	ResponseHeaderTimeout: time.Second * 10,
+}}
 
 // Command line arguments
 var (
@@ -36,7 +45,7 @@ func LogError(e error) {
 // ParseFlags parses the commandline flags
 func ParseFlags() {
 	flagset.StringVar(&OutputDir, "o", "", "Output directory for downloaded files")
-	flagset.IntVar(&Page, "p", 1, "Page to start downloading from.")
+	flagset.IntVar(&Page, "p", 0, "Page to start downloading from.")
 	flagset.IntVar(&Limit, "l", 1, "Maximum number of images to download")
 	flagset.StringVar(&Tags, "t", "", "Space separated tags to search for")
 	flagset.BoolVar(&Random, "r", false, "Specifies if the result should be random. Only works on danbooru")
@@ -50,16 +59,10 @@ func ParseFlags() {
 	BooruURL = os.Args[1]
 
 	flagset.Parse(os.Args[2:])
-	fmt.Println("Limit: ", Limit)
 }
 
 func main() {
 	ParseFlags()
-
-	if OutputDir == "" {
-		fmt.Println("Invalid output directory")
-		return
-	}
 
 	results, err := downloader.Search(BooruURL, downloader.SearchQuery{
 		Tags:   Tags,
@@ -68,16 +71,45 @@ func main() {
 		Random: Random,
 	})
 	if err != nil {
-		fmt.Println("Error obtaining information from booru: ", err)
+		fmt.Println(err)
+		return
 	}
 
-	sort.Sort(downloader.SearchResultsByScore(results))
+	// If not enough images have been found, Search the next page until 'Limit' results have been found
+	// Or nothing is returned.
+	for pagenum := Page + 1; len(results) < Limit; pagenum++ {
 
-	os.MkdirAll(OutputDir, 0666)
+		r, err := downloader.Search(BooruURL, downloader.SearchQuery{
+			Tags:   Tags,
+			Limit:  Limit,
+			Page:   pagenum,
+			Random: Random,
+		})
+		if err != nil {
+			fmt.Println("Finished searching for images: ", err)
+			break
+		}
+		results = append(results, r...)
+		fmt.Println("Added ", len(r), "images to queue")
+
+	}
+	fmt.Println("found ", len(results), "images")
+
+	if OutputDir != "" {
+		err = os.MkdirAll(OutputDir, 0666)
+		if err != nil {
+			fmt.Println("Error creating output directory", err)
+			return
+		}
+	}
+
+	fmt.Println("Attempting to save images...")
+
 	for i, v := range results {
 		LogError(SaveFileFromURL(v.ImageURL, filepath.Join(OutputDir, fmt.Sprint(v.ID))))
 		fmt.Printf("%d/%d\t%s\n", i+1, len(results), v.ImageURL)
 	}
+
 }
 
 // SaveFileFromURL will download the file from the specified url,
@@ -87,7 +119,7 @@ func main() {
 // 					as it will be inferred.
 func SaveFileFromURL(URL string, path string) error {
 
-	resp, err := http.Get(URL)
+	resp, err := client.Get(URL)
 	if err != nil {
 		return err
 	}

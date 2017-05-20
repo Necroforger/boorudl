@@ -22,14 +22,13 @@ const (
 
 // SearchResult represents an Image search result
 type SearchResult struct {
-	FileExtension string
-	ImageURL      string
-	ThumbnailURL  string
-	Tags          string
-	Author        string
-	Rating        string
-	Score         int
-	ID            int
+	ImageURL     string
+	ThumbnailURL string
+	Tags         string
+	Author       string
+	Rating       string
+	Score        int
+	ID           int
 }
 
 // Searcher represents a searchable booru that returns a
@@ -56,7 +55,7 @@ type SearchQuery struct {
 func NewSearchQuery() SearchQuery {
 	return SearchQuery{
 		Limit:  1,
-		Page:   1,
+		Page:   0,
 		PostID: "",
 		Random: false,
 		Tags:   "",
