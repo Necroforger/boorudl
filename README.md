@@ -1,8 +1,8 @@
-# 1. Table of contents
+# 1. Boorudl
 
 <!-- TOC -->
 
-- [1. Table of contents](#1-table-of-contents)
+- [1. Boorudl](#1-boorudl)
     - [1.1. Installing](#11-installing)
     - [1.2. Usage](#12-usage)
         - [1.2.1. Usage without arguments](#121-usage-without-arguments)
