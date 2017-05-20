@@ -10,7 +10,11 @@ Table of contents
 
 
 # 2. Installing
+
 ``go get -U github.com/Necroforger/boorudl``
+
+Or download a version from the [releases]("https://github.com/Necroforger/boorudl/releases").
+
 
 # 3. Usage
 ``boorudl https://safebooru.org -o "Cirno Pictures" -l 9 -t "Cirno blue"``
