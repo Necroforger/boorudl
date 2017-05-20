@@ -76,7 +76,7 @@ func main() {
 	os.MkdirAll(OutputDir, 0666)
 	for i, v := range results {
 		LogError(SaveFileFromURL(v.ImageURL, filepath.Join(OutputDir, fmt.Sprint(v.ID))))
-		fmt.Printf("%d/%d\n", i+1, len(results))
+		fmt.Printf("%d/%d\t%s\n", i+1, len(results), v.ImageURL)
 	}
 }
 
