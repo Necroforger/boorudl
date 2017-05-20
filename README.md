@@ -1,7 +1,7 @@
-# 1. Table of Contents
+Table of contents
+====================
 <!-- TOC -->
 
-- [1. Table of Contents](#1-table-of-contents)
 - [2. Installing](#2-installing)
 - [3. Usage](#3-usage)
     - [3.1. Usage without arguments](#31-usage-without-arguments)
@@ -28,4 +28,4 @@ The images will be named in the format [id].[extension].
 | -r   | Get a random result (danbooru only)    |
 
 ## 3.1. Usage without arguments
-If executed without arguments, you will be asked to enter the information.
+If executed without arguments, you will be asked to enter the information one line at a time.
