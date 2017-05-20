@@ -82,15 +82,15 @@ func NewDanbooru(client *http.Client) *Danbooru {
 
 func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) string {
 
-	// rand := "false"
-	// if random {
-	// 	rand = "true"
-	// }
+	rand := "false"
+	if random {
+		rand = "true"
+	}
 
 	return EndpointDanbooruPosts +
 		fmt.Sprintf(
-			"?limit=%d&page=%d&tags=%s",
-			limit, page, url.QueryEscape(tags),
+			"?limit=%d&page=%d&random=%stags=%s",
+			limit, page, rand, url.QueryEscape(tags),
 		)
 }
 
@@ -100,31 +100,6 @@ func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) stri
 // Page
 // Tags
 func (d *Danbooru) Search(q SearchQuery) (results []*SearchResult, err error) {
-	// results = []*SearchResult{}
-
-	// Split the limit into multiple queries if its beyond the supported range
-	// if q.Limit > DanbooruMaxLimit {
-	// 	numpages := q.Limit / DanbooruMaxLimit
-	// 	for i := q.Page; i < q.Page+numpages; i++ {
-	// 		t := q
-	// 		t.Page = i
-	// 		t.Limit = DanbooruMaxLimit
-
-	// 		res, er := d.search(t)
-	// 		if er != nil {
-	// 			return nil, er
-	// 		}
-
-	// 		// Return if there are no more images to find
-	// 		if len(res) == 0 {
-	// 			return
-	// 		}
-
-	// 		results = append(results, res...)
-	// 	}
-	// 	return
-	// }
-
 	// Danbooru pages start at one, so add one to the page index.
 	q.Page++
 

@@ -94,32 +94,6 @@ func (g *GenericBooru) searchURL(limit int, pageid int, tags string, postID stri
 
 // Search a generic booru
 func (g *GenericBooru) Search(q SearchQuery) ([]*SearchResult, error) {
-	// results := []*SearchResult{}
-
-	// Split the limit into multiple queries if its beyond the supported range
-	// if q.Limit > g.SearchLimit {
-	// 	numpages := q.Limit / g.SearchLimit
-	// 	fmt.Println(q.Page, " to ", q.Page+numpages)
-	// 	numRequests := q.Page + numpages
-	// 	for i := q.Page; i < numRequests; i++ {
-	// 		q.Page = i
-	// 		q.Limit = g.SearchLimit
-
-	// 		res, err := g.search(q)
-	// 		if err != nil {
-	// 			return nil, err
-	// 		}
-
-	// 		// Return if there are no more images to find
-	// 		if len(res) == 0 {
-	// 			return results, nil
-	// 		}
-
-	// 		results = append(results, res...)
-	// 	}
-	// 	return results, nil
-	// }
-
 	if q.Limit > g.SearchLimit {
 		q.Limit = g.SearchLimit
 	}
