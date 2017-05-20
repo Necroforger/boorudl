@@ -1,10 +1,11 @@
 # boorudl
-Downloading
+Installing:
+
 ``go get -U github.com/Necroforger/boorudl``
 
 # Usage
-**Example usage:**
 ``boorudl https://safebooru.org -o "Cirno Pictures" -l 9 -t "Cirno blue"``
+
 This will download a maximum of 9 images from safebooru with the tags *Cirno* and *Blue* to the directory *Cirno Pictures*
 The images will be named in the format [id].[extension].
 
