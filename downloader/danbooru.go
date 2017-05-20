@@ -68,10 +68,15 @@ type DanbooruPost struct {
 	PreviewFileURL      string      `json:"preview_file_url"`
 }
 
+// Danbooru searches images from http://danbooru.donmai.us/
+type Danbooru struct {
+	client *http.Client
+}
+
 // NewDanbooru returns a pointer to new Danbooru struct
-func NewDanbooru() *Danbooru {
+func NewDanbooru(client *http.Client) *Danbooru {
 	return &Danbooru{
-		&http.Client{},
+		client,
 	}
 }
 
@@ -103,9 +108,11 @@ func (d *Danbooru) Search(q SearchQuery) (results []*SearchResult, err error) {
 		for i := q.Page; i < q.Page+numpages; i++ {
 			t := q
 			t.Page = i
+			t.Limit = DanbooruMaxLimit
+
 			res, er := d.search(t)
 			if er != nil {
-				return
+				return nil, er
 			}
 
 			// Return if there are no more images to find
@@ -131,7 +138,6 @@ func (d *Danbooru) search(q SearchQuery) (results []*SearchResult, err error) {
 	defer res.Body.Close()
 
 	var posts []*DanbooruPost
-
 	err = json.NewDecoder(res.Body).Decode(&posts)
 	if err != nil {
 		return
@@ -139,7 +145,7 @@ func (d *Danbooru) search(q SearchQuery) (results []*SearchResult, err error) {
 
 	for _, v := range posts {
 
-		// If the file does not exist, skip to the next post
+		// If the file does not exist, skip to the next post.
 		if v.LargeFileURL == "" || v.PreviewFileURL == "" || v.FileExt == "" {
 			continue
 		}
@@ -151,7 +157,10 @@ func (d *Danbooru) search(q SearchQuery) (results []*SearchResult, err error) {
 			FileExtension: v.FileExt,
 			ID:            v.ID,
 			Tags:          v.TagString,
+			Rating:        v.Rating,
+			Score:         v.Score,
 		})
+
 	}
 
 	return
