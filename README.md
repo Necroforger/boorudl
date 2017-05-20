@@ -13,7 +13,7 @@ Table of contents
 
 ``go get -U github.com/Necroforger/boorudl``
 
-Or download a version from the [releases]("https://github.com/Necroforger/boorudl/releases").
+Or download a version from the [releases](https://github.com/Necroforger/boorudl/releases).
 
 
 # 3. Usage
