@@ -1,20 +1,34 @@
 package downloader
 
-// SearchResultsByScore is used to sort search results by score
+import "sort"
+
+// postsByScore is used to sort search results by score
 // It will place the highest scores first
-type SearchResultsByScore []*Post
+type postsByScore []Post
 
 // Less implements the sortable interface
-func (s SearchResultsByScore) Less(a, b int) bool {
+func (s postsByScore) Less(a, b int) bool {
 	return s[a].Score > s[b].Score
 }
 
 // Swap implements the sortable interface
-func (s SearchResultsByScore) Swap(a, b int) {
+func (s postsByScore) Swap(a, b int) {
 	s[a], s[b] = s[b], s[a]
 }
 
 // Len implements the sortable interface
-func (s SearchResultsByScore) Len() int {
+func (s postsByScore) Len() int {
 	return len(s)
+}
+
+/////////////////////////////////////////
+//              POSTS
+////////////////////////////////////////
+
+// Posts supplies methods for filtering and managing a slice of search results.
+type Posts []Post
+
+// SortByScore sorts the slice in order of score from highest score to lowest.
+func (p Posts) SortByScore() {
+	sort.Sort(postsByScore(p))
 }

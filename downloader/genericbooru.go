@@ -93,7 +93,7 @@ func (g *GenericBooru) searchURL(limit int, pageid int, tags string, postID stri
 }
 
 // Search a generic booru
-func (g *GenericBooru) Search(q SearchQuery) ([]*Post, error) {
+func (g *GenericBooru) Search(q SearchQuery) (Posts, error) {
 	if q.Limit > g.SearchLimit {
 		q.Limit = g.SearchLimit
 	}
@@ -101,9 +101,9 @@ func (g *GenericBooru) Search(q SearchQuery) ([]*Post, error) {
 	return g.search(q)
 }
 
-func (g *GenericBooru) search(q SearchQuery) ([]*Post, error) {
+func (g *GenericBooru) search(q SearchQuery) (Posts, error) {
 
-	results := []*Post{}
+	results := []Post{}
 
 	searchURL, err := g.searchURL(q.Limit, q.Page, q.Tags, q.PostID)
 	if err != nil {
@@ -160,7 +160,7 @@ func (g *GenericBooru) search(q SearchQuery) ([]*Post, error) {
 			score = -1
 		}
 
-		results = append(results, &Post{
+		results = append(results, Post{
 			Author:       v.CreatorID,
 			ID:           ID,
 			Tags:         v.Tags,

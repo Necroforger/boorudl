@@ -31,13 +31,10 @@ type Post struct {
 	ID           int
 }
 
-// SearchResults supplies methods for filtering and managing a slice of search results.
-type SearchResults []Post
-
 // Searcher represents a searchable booru that returns a
 // *SearchResult.
 type Searcher interface {
-	Search(q SearchQuery) ([]*Post, error)
+	Search(q SearchQuery) (Posts, error)
 }
 
 // SearchQuery is a searchquery used to provide optional values in searches
@@ -66,7 +63,7 @@ func NewSearchQuery() SearchQuery {
 }
 
 // Search attempts to search images from the given booru link
-func Search(URL string, q SearchQuery) ([]*Post, error) {
+func Search(URL string, q SearchQuery) (Posts, error) {
 	u, err := url.Parse(URL)
 	if err != nil {
 		return nil, err

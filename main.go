@@ -123,6 +123,8 @@ func main() {
 		return
 	}
 
+	fmt.Println("Added ", len(results), "images to queue")
+
 	// If not enough images have been found, Search the next page until 'Limit' results have been found
 	// Or nothing is returned.
 	for pagenum := Page + 1; len(results) < Limit; pagenum++ {
@@ -142,12 +144,12 @@ func main() {
 
 	}
 
-	fmt.Println("found ", len(results), "images")
+	fmt.Println("queued ", len(results), "images")
 
 	// Trim results to fit the supplied image limit
 	if len(results) > Limit {
 		results = results[:Limit]
-		fmt.Println("Trimmed results to ", len(results), " images")
+		fmt.Println("Trimmed queue to ", len(results), " images")
 	}
 
 	if OutputDir != "" {
