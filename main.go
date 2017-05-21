@@ -29,12 +29,14 @@ var client = http.Client{Transport: &httpclient.Transport{
 
 // Command line arguments
 var (
-	OutputDir string
-	BooruURL  string
-	Tags      string
-	Limit     int
-	Page      int
-	Random    bool
+	OutputDir      string
+	BooruURL       string
+	Tags           string
+	Limit          int
+	Page           int
+	Random         bool
+	SortByScore    bool
+	ExcludeRatings string
 )
 
 // LogError logs errors if they are not nil
@@ -48,9 +50,11 @@ func LogError(e error) {
 func ParseFlags() {
 	flagset.StringVar(&OutputDir, "o", "", "Output directory for downloaded files")
 	flagset.StringVar(&Tags, "t", "", "Space separated tags to search for")
+	flagset.StringVar(&ExcludeRatings, "-exclude-ratings", "", "Excludes posts with the supplied ratings. Read the github page for more information")
 	flagset.IntVar(&Page, "p", 0, "Page to start downloading from.")
 	flagset.IntVar(&Limit, "l", 1, "Maximum number of images to download")
 	flagset.BoolVar(&Random, "r", false, "Specifies if the result should be random. Only works on danbooru")
+	flagset.BoolVar(&SortByScore, "-byscore", false, "Sorts the results by order of score. This will ensure that the highest rated posts are downloaded first")
 
 	if len(os.Args) < 3 {
 		fmt.Fprintln(os.Stderr, "usage: boorudl [booru site] [flags]")
@@ -143,13 +147,26 @@ func main() {
 		fmt.Println("Added ", len(r), "images to queue")
 
 	}
-
 	fmt.Println("queued ", len(results), "images")
 
 	// Trim results to fit the supplied image limit
 	if len(results) > Limit {
 		results = results[:Limit]
 		fmt.Println("Trimmed queue to ", len(results), " images")
+	}
+
+	if SortByScore {
+		results.SortByScore()
+		fmt.Println("Sorted results by score in order of highest to lowest")
+	}
+
+	// Remove excluded ratings from search
+	if excludes := strings.Split(ExcludeRatings, ""); len(excludes) != 0 {
+		fmt.Println("Excluding posts by rating: ", ExcludeRatings)
+		for _, v := range excludes {
+			removed := results.RemoveByRating(v)
+			fmt.Println(v, ": removed ", len(removed), "results")
+		}
 	}
 
 	if OutputDir != "" {
@@ -159,9 +176,7 @@ func main() {
 			return
 		}
 	}
-
 	fmt.Println("Attempting to save images...")
-
 	for i, v := range results {
 		LogError(SaveFileFromURL(v.ImageURL, filepath.Join(OutputDir, fmt.Sprint(v.ID))))
 		fmt.Printf("%d/%d\t%s\n", i+1, len(results), v.ImageURL)
