@@ -50,11 +50,11 @@ func LogError(e error) {
 func ParseFlags() {
 	flagset.StringVar(&OutputDir, "o", "", "Output directory for downloaded files")
 	flagset.StringVar(&Tags, "t", "", "Space separated tags to search for")
-	flagset.StringVar(&ExcludeRatings, "-exclude-ratings", "", "Excludes posts with the supplied ratings. Read the github page for more information")
+	flagset.StringVar(&ExcludeRatings, "exclude-ratings", "", "Excludes posts with the supplied ratings. Read the github page for more information")
 	flagset.IntVar(&Page, "p", 0, "Page to start downloading from.")
 	flagset.IntVar(&Limit, "l", 1, "Maximum number of images to download")
 	flagset.BoolVar(&Random, "r", false, "Specifies if the result should be random. Only works on danbooru")
-	flagset.BoolVar(&SortByScore, "-byscore", false, "Sorts the results by order of score. This will ensure that the highest rated posts are downloaded first")
+	flagset.BoolVar(&SortByScore, "byscore", false, "Sorts the results by order of score. This will ensure that the highest rated posts are downloaded first")
 
 	if len(os.Args) < 3 {
 		fmt.Fprintln(os.Stderr, "usage: boorudl [booru site] [flags]")

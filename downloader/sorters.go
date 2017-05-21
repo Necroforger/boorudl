@@ -35,7 +35,7 @@ func (p Posts) RemoveByRating(rating string) (removed Posts) {
 
 	for i, post := range p {
 		if post.Rating == rating {
-			p = append(p[i:], p[i+1:]...)
+			p = append(p[:i], p[i+1:]...)
 		}
 	}
 
