@@ -38,11 +38,11 @@ type Searcher interface {
 }
 
 // SearchQuery is a searchquery used to provide optional values in searches
-// Tags:   	Space separated tags to search for
-// PostID:  Search for a specific post ID
-// Limit:   The number of results to retrieve
-// Page: 	The number of the next page.
-// Random: 	Retrieve results randomly
+// 	Tags:   	Space separated tags to search for
+// 	PostID:  Search for a specific post ID
+// 	Limit:   The number of results to retrieve
+// 	Page: 	The number of the next page.
+// 	Random: 	Retrieve results randomly
 type SearchQuery struct {
 	Tags   string
 	PostID string
