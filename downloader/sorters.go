@@ -2,7 +2,7 @@ package downloader
 
 // SearchResultsByScore is used to sort search results by score
 // It will place the highest scores first
-type SearchResultsByScore []*SearchResult
+type SearchResultsByScore []*Post
 
 // Less implements the sortable interface
 func (s SearchResultsByScore) Less(a, b int) bool {

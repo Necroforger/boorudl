@@ -89,7 +89,7 @@ func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) stri
 
 	return EndpointDanbooruPosts +
 		fmt.Sprintf(
-			"?limit=%d&page=%d&random=%stags=%s",
+			"?limit=%d&page=%d&random=%s&tags=%s",
 			limit, page, rand, url.QueryEscape(tags),
 		)
 }
@@ -99,7 +99,7 @@ func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) stri
 // Random
 // Page
 // Tags
-func (d *Danbooru) Search(q SearchQuery) (results []*SearchResult, err error) {
+func (d *Danbooru) Search(q SearchQuery) (results []*Post, err error) {
 	// Danbooru pages start at one, so add one to the page index.
 	q.Page++
 
@@ -110,8 +110,8 @@ func (d *Danbooru) Search(q SearchQuery) (results []*SearchResult, err error) {
 	return d.search(q)
 }
 
-func (d *Danbooru) search(q SearchQuery) (results []*SearchResult, err error) {
-	results = []*SearchResult{}
+func (d *Danbooru) search(q SearchQuery) (results []*Post, err error) {
+	results = []*Post{}
 
 	res, err := d.client.Get(d.searchURL(q.Tags, q.Limit, q.Page, q.Random))
 	if err != nil {
@@ -136,7 +136,7 @@ func (d *Danbooru) search(q SearchQuery) (results []*SearchResult, err error) {
 			continue
 		}
 
-		results = append(results, &SearchResult{
+		results = append(results, &Post{
 			ImageURL:     EndpointDanbooru + v.LargeFileURL,
 			ThumbnailURL: EndpointDanbooru + v.PreviewFileURL,
 			Author:       v.UploaderName,

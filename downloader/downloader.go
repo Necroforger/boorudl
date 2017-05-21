@@ -20,8 +20,8 @@ const (
 	RatingExplicit     = "e"
 )
 
-// SearchResult represents an Image search result
-type SearchResult struct {
+// Post represents an Image search result
+type Post struct {
 	ImageURL     string
 	ThumbnailURL string
 	Tags         string
@@ -31,10 +31,13 @@ type SearchResult struct {
 	ID           int
 }
 
+// SearchResults supplies methods for filtering and managing a slice of search results.
+type SearchResults []Post
+
 // Searcher represents a searchable booru that returns a
 // *SearchResult.
 type Searcher interface {
-	Search(q SearchQuery) ([]*SearchResult, error)
+	Search(q SearchQuery) ([]*Post, error)
 }
 
 // SearchQuery is a searchquery used to provide optional values in searches
@@ -63,7 +66,7 @@ func NewSearchQuery() SearchQuery {
 }
 
 // Search attempts to search images from the given booru link
-func Search(URL string, q SearchQuery) ([]*SearchResult, error) {
+func Search(URL string, q SearchQuery) ([]*Post, error) {
 	u, err := url.Parse(URL)
 	if err != nil {
 		return nil, err

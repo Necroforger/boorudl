@@ -47,9 +47,9 @@ func LogError(e error) {
 // ParseFlags parses the commandline flags
 func ParseFlags() {
 	flagset.StringVar(&OutputDir, "o", "", "Output directory for downloaded files")
+	flagset.StringVar(&Tags, "t", "", "Space separated tags to search for")
 	flagset.IntVar(&Page, "p", 0, "Page to start downloading from.")
 	flagset.IntVar(&Limit, "l", 1, "Maximum number of images to download")
-	flagset.StringVar(&Tags, "t", "", "Space separated tags to search for")
 	flagset.BoolVar(&Random, "r", false, "Specifies if the result should be random. Only works on danbooru")
 
 	if len(os.Args) < 3 {
