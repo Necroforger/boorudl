@@ -141,7 +141,14 @@ func main() {
 		fmt.Println("Added ", len(r), "images to queue")
 
 	}
+
 	fmt.Println("found ", len(results), "images")
+
+	// Trim results to fit the supplied image limit
+	if len(results) > Limit {
+		results = results[:Limit]
+		fmt.Println("Trimmed results to ", len(results), " images")
+	}
 
 	if OutputDir != "" {
 		err = os.MkdirAll(OutputDir, 0600)
