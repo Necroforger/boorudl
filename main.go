@@ -176,6 +176,7 @@ func main() {
 			return
 		}
 	}
+
 	fmt.Println("Attempting to save images...")
 	for i, v := range results {
 		LogError(SaveFileFromURL(v.ImageURL, filepath.Join(OutputDir, fmt.Sprint(v.ID))))

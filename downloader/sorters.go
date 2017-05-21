@@ -1,6 +1,8 @@
 package downloader
 
-import "sort"
+import (
+	"sort"
+)
 
 /////////////////////////////////////////
 //              POSTS
@@ -10,34 +12,39 @@ import "sort"
 type Posts []Post
 
 // SortByScore sorts the slice in order of score from highest score to lowest.
-func (p Posts) SortByScore() Posts {
-	sort.Sort(postsByScore(p))
-	return p
+func (p *Posts) SortByScore() Posts {
+	sort.Sort(postsByScore(*p))
+	return *p
 }
 
 // SortByID sorts the slice in order if the post IDS from lowest to highest.
-func (p Posts) SortByID() Posts {
-	sort.Sort(postsByID(p))
-	return p
+func (p *Posts) SortByID() Posts {
+	sort.Sort(postsByID(*p))
+	return *p
 }
 
 // SortByRating sorts the slice in the alphabetical order of the post's rating
-func (p Posts) SortByRating() Posts {
-	sort.Sort(postsByRating(p))
-	return p
+func (p *Posts) SortByRating() Posts {
+	sort.Sort(postsByRating(*p))
+	return *p
 }
 
 // RemoveByRating removes all posts with the specified rating from the slice
 // The available ratings are stored in constants in downloader.go
 // It will return the an array of posts that were removed.
-func (p Posts) RemoveByRating(rating string) (removed Posts) {
+func (p *Posts) RemoveByRating(rating string) (removed Posts) {
 	removed = Posts{}
 
-	for i, post := range p {
-		if post.Rating == rating {
-			p = append(p[:i], p[i+1:]...)
+	j := len(*p)
+	for i := 0; i < j; i++ {
+		if (*p)[i].Rating == rating {
+			removed = append(removed, (*p)[i])
+			(*p)[i], (*p)[j-1] = (*p)[j-1], (*p)[i]
+			j--
+			i--
 		}
 	}
+	(*p) = (*p)[:j]
 
 	return
 }
