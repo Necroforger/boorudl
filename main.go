@@ -144,7 +144,7 @@ func main() {
 	fmt.Println("found ", len(results), "images")
 
 	if OutputDir != "" {
-		err = os.MkdirAll(OutputDir, 0666)
+		err = os.MkdirAll(OutputDir, 0600)
 		if err != nil {
 			fmt.Println("Error creating output directory", err)
 			return
