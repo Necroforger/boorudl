@@ -87,6 +87,8 @@ func SearcherFromURL(u *url.URL) Searcher {
 	switch u.Host {
 	case "danbooru.donmai.us":
 		s = NewDanbooru(&http.Client{})
+	case "google.com":
+		s = NewGoogleImages(&http.Client{})
 	default:
 		s = NewGenericBooru(&http.Client{}, u.String(), 100)
 	}
