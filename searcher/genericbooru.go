@@ -1,4 +1,4 @@
-package downloader
+package searcher
 
 import (
 	"encoding/xml"
