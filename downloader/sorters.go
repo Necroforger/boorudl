@@ -1,4 +1,4 @@
-package searcher
+package downloader
 
 import (
 	"sort"

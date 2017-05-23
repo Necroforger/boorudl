@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Necroforger/boorudl/downloader"
 	astilectron "github.com/Necroforger/go-astilectron"
 )
 
@@ -13,8 +12,6 @@ var (
 	electron         *astilectron.Astilectron
 	window           *astilectron.Window
 )
-
-var posts downloader.Posts
 
 func main() {
 
@@ -46,10 +43,9 @@ func main() {
 	}
 
 	if window, err = electron.NewWindow(workingDirectory+"/index.html", &astilectron.WindowOptions{
-		Width:     astilectron.PtrInt(800),
-		Height:    astilectron.PtrInt(600),
-		Center:    astilectron.PtrBool(true),
-		Resizable: astilectron.PtrBool(false),
+		Width:  astilectron.PtrInt(800),
+		Height: astilectron.PtrInt(600),
+		Center: astilectron.PtrBool(true),
 	}); err != nil {
 		fmt.Println(err)
 		return

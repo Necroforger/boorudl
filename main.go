@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Necroforger/Boorudl/searcher"
+	"github.com/Necroforger/Boorudl/downloader"
 	httpclient "github.com/mreiferson/go-httpclient"
 )
 
@@ -116,7 +116,7 @@ func SetFromUserInput() {
 func main() {
 	ParseFlags()
 
-	results, err := searcher.Search(BooruURL, searcher.SearchQuery{
+	results, err := downloader.Search(BooruURL, downloader.SearchQuery{
 		Tags:   Tags,
 		Limit:  Limit,
 		Page:   Page,
@@ -133,7 +133,7 @@ func main() {
 	// Or nothing is returned.
 	for pagenum := Page + 1; len(results) < Limit; pagenum++ {
 
-		r, err := searcher.Search(BooruURL, searcher.SearchQuery{
+		r, err := downloader.Search(BooruURL, downloader.SearchQuery{
 			Tags:   Tags,
 			Limit:  Limit,
 			Page:   pagenum,
