@@ -48,17 +48,41 @@ func (g *GoogleImages) SearchURL(query string) string {
 
 // Search implements the searcher interface
 func (g *GoogleImages) Search(q SearchQuery) (Posts, error) {
+
+	// Searching multiple pages is not supported
+	// Anything greater than zero will return the same as
+	// Searching for zero.
 	if q.Page > 0 {
 		return nil, ErrNoPosts
 	}
-	return g.search(q)
+
+	res, err := g.GoogleSearch(q.Tags, q.Limit)
+	if err != nil {
+		return nil, err
+	}
+
+	posts := Posts{}
+
+	// Convert a googlepost to a Post
+	for _, goo := range res {
+		posts = append(posts, Post{
+			ImageURL:     goo.Ou,
+			ThumbnailURL: goo.Tu,
+			Rating:       "s",
+			Score:        0,
+			ID:           rand.Int(), // Generate a random ID, because google images uses strings for its ids
+			Title:        goo.Pt,
+		})
+	}
+
+	return posts, nil
 }
 
-func (g *GoogleImages) search(q SearchQuery) (Posts, error) {
+// GoogleSearch searches for the given query and returns a slice of google posts
+func (g *GoogleImages) GoogleSearch(query string, limit int) ([]GooglePost, error) {
+	results := []GooglePost{}
 
-	results := Posts{}
-
-	request, err := http.NewRequest("GET", g.SearchURL(q.Tags), nil)
+	request, err := http.NewRequest("GET", g.SearchURL(query), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +92,6 @@ func (g *GoogleImages) search(q SearchQuery) (Posts, error) {
 	request.Header.Add("Connection", "keep-alive")
 	request.Header.Add("Accept-Language", "en-US,en;q=0.8")
 	request.Header.Add("Accept", "*/*")
-	// request.Header.Add("Accept-Encoding", "gzip, deflate, sdch")
 
 	resp, err := g.client.Do(request)
 	if err != nil {
@@ -83,12 +106,10 @@ func (g *GoogleImages) search(q SearchQuery) (Posts, error) {
 		return nil, err
 	}
 
-	// fmt.Println(body)
-
 	jsonStart := `class="rg_meta">{`
 	jsonEnd := `</div>`
 
-	for i := 0; i < q.Limit; i++ {
+	for i := 0; i < limit; i++ {
 		var jsonData string
 
 		startIndex := strings.Index(body, jsonStart)
@@ -107,14 +128,7 @@ func (g *GoogleImages) search(q SearchQuery) (Posts, error) {
 
 		var goo GooglePost
 		if err := json.Unmarshal([]byte(jsonData), &goo); err == nil {
-			// fmt.Println("Unmarshaled", jsonData)
-			results = append(results, Post{
-				ImageURL:     goo.Ou,
-				ThumbnailURL: goo.Tu,
-				Rating:       "s",
-				Score:        0,
-				ID:           rand.Int(), // Generate a random ID, because google images uses strings for its ids
-			})
+			results = append(results, goo)
 		}
 	}
 

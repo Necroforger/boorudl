@@ -27,6 +27,7 @@ type Post struct {
 	Tags         string
 	Author       string
 	Rating       string
+	Title        string
 	Score        int
 	ID           int
 }
