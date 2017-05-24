@@ -7,6 +7,7 @@
     - [Usage](#usage)
         - [Usage without arguments](#usage-without-arguments)
         - [Excluding specific ratings](#excluding-specific-ratings)
+    - [Other sites](#other-sites)
 
 <!-- /TOC -->
 
@@ -54,3 +55,9 @@ Example:
 ``boorudl https://safebooru.org -o "Cirno Pictures" -l 9 -t "Cirno blue" --exclude-ratings qe``
 
 Will exclude all ratings that are questionable and explicit.
+
+## Other sites
+
+| Site       | Info                                         |
+|------------|----------------------------------------------|
+| google.com | Download up to 100 images from google images |
