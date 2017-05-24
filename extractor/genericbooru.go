@@ -1,4 +1,4 @@
-package downloader
+package extractor
 
 import (
 	"encoding/xml"

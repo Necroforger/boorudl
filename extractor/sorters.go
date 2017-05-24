@@ -1,4 +1,4 @@
-package downloader
+package extractor
 
 import (
 	"sort"
@@ -30,7 +30,7 @@ func (p *Posts) SortByRating() Posts {
 }
 
 // RemoveByRating removes all posts with the specified rating from the slice
-// The available ratings are stored in constants in downloader.go
+// The available ratings are stored in constants in extractor.go
 // It will return the an array of posts that were removed.
 func (p *Posts) RemoveByRating(rating string) (removed Posts) {
 	removed = Posts{}
