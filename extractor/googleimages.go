@@ -43,7 +43,7 @@ func NewGoogleImages(client *http.Client) *GoogleImages {
 
 // SearchURL generates a URL to search from
 func (g *GoogleImages) SearchURL(query string) string {
-	return "https://www.google.com/search?biw=985&bih=661&tbm=isch&sa=1&q=" + url.QueryEscape(query)
+	return "https://www.google.com/search?tbm=isch&q=" + url.QueryEscape(query)
 }
 
 // Search implements the searcher interface
