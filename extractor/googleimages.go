@@ -48,13 +48,13 @@ func (g *GoogleImages) SearchURL(query string) string {
 
 // Search implements the searcher interface
 func (g *GoogleImages) Search(q SearchQuery) (Posts, error) {
+	if q.Page > 0 {
+		return nil, ErrNoPosts
+	}
 	return g.search(q)
 }
 
 func (g *GoogleImages) search(q SearchQuery) (Posts, error) {
-	if q.Page > 0 {
-		return nil, ErrNoPosts
-	}
 
 	results := Posts{}
 
