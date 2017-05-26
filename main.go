@@ -116,23 +116,11 @@ func SetFromUserInput() {
 func main() {
 	ParseFlags()
 
-	results, err := extractor.Search(BooruURL, extractor.SearchQuery{
-		Tags:   Tags,
-		Limit:  Limit,
-		Page:   Page,
-		Random: Random,
-	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("Added ", len(results), "images to queue")
+	results := extractor.Posts{}
 
 	// If not enough images have been found, Search the next page until 'Limit' results have been found
 	// Or nothing is returned.
-	for pagenum := Page + 1; len(results) < Limit; pagenum++ {
-
+	for pagenum := Page; len(results) < Limit; pagenum++ {
 		r, err := extractor.Search(BooruURL, extractor.SearchQuery{
 			Tags:   Tags,
 			Limit:  Limit,
@@ -145,7 +133,6 @@ func main() {
 		}
 		results = append(results, r...)
 		fmt.Println("Added ", len(r), "images to queue")
-
 	}
 	fmt.Println("queued ", len(results), "images")
 
@@ -170,7 +157,7 @@ func main() {
 	}
 
 	if OutputDir != "" {
-		err = os.MkdirAll(OutputDir, 0600)
+		err := os.MkdirAll(OutputDir, 0600)
 		if err != nil {
 			fmt.Println("Error creating output directory", err)
 			return
