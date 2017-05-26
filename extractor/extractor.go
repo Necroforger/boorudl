@@ -67,9 +67,10 @@ func NewSearchQuery() SearchQuery {
 func Search(URL string, q SearchQuery) (Posts, error) {
 	u, err := url.Parse(URL)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Error parsing URL " + err.Error())
 	}
 
+	setDefaultURLScheme(u)
 	s := SearcherFromURL(u)
 
 	res, err := s.Search(q)
@@ -78,6 +79,14 @@ func Search(URL string, q SearchQuery) (Posts, error) {
 	}
 
 	return res, nil
+}
+
+func setDefaultURLScheme(u *url.URL) {
+	// Set the default scheme to http if none is specified.
+	if u.Scheme == "" {
+		u.Scheme = "http"
+		u.Host, u.Path = u.Path, ""
+	}
 }
 
 // SearcherFromURL returns a booru searcher from a hostname
