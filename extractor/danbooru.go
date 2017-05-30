@@ -82,15 +82,15 @@ func NewDanbooru(client *http.Client) *Danbooru {
 
 func (d *Danbooru) searchURL(tags string, limit int, page int, random bool) string {
 
-	rand := "false"
+	rand := ""
 	if random {
-		rand = "true"
+		rand = "&random=true"
 	}
 
 	return EndpointDanbooruPosts +
 		fmt.Sprintf(
-			"?limit=%d&page=%d&random=%s&tags=%s",
-			limit, page, rand, url.QueryEscape(tags),
+			"?limit=%d&page=%d"+rand+"&tags=%s",
+			limit, page, url.QueryEscape(tags),
 		)
 }
 
