@@ -106,7 +106,7 @@ func (g *GoogleImages) GoogleSearch(query string, limit int) ([]GooglePost, erro
 		return nil, err
 	}
 
-	jsonStart := `class="rg_meta">{`
+	jsonStart := `class="rg_meta notranslate">{`
 	jsonEnd := `</div>`
 
 	for i := 0; i < limit; i++ {
