@@ -92,15 +92,18 @@ func setDefaultURLScheme(u *url.URL) {
 // SearcherFromURL returns a booru searcher from a hostname
 func SearcherFromURL(u *url.URL) Searcher {
 	var s Searcher
+	client := http.DefaultClient
 
 	// Check for custom searchers, if not, use the GenericBooru
 	switch u.Host {
 	case "danbooru.donmai.us":
-		s = NewDanbooru(&http.Client{})
+		s = NewDanbooru(client)
 	case "google.com":
-		s = NewGoogleImages(&http.Client{})
+		s = NewGoogleImages(client)
+	case "rule34.paheal.net":
+		s = NewPaheal(client)
 	default:
-		s = NewGenericBooru(&http.Client{}, u.String(), 100)
+		s = NewGenericBooru(client, u.String(), 100)
 	}
 
 	return s
