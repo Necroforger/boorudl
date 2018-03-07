@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"path"
+	"strings"
 )
 
 // Endpoint constants for danbooru
@@ -136,8 +138,16 @@ func (d *Danbooru) search(q SearchQuery) (results Posts, err error) {
 			continue
 		}
 
+		var imageURL string
+		if strings.HasPrefix(v.LargeFileURL, "http://") ||
+			strings.HasPrefix(v.LargeFileURL, "https://") {
+			imageURL = v.LargeFileURL
+		} else {
+			imageURL = path.Join(EndpointDanbooru, v.LargeFileURL)
+		}
+
 		results = append(results, Post{
-			ImageURL:     EndpointDanbooru + v.LargeFileURL,
+			ImageURL:     imageURL,
 			ThumbnailURL: EndpointDanbooru + v.PreviewFileURL,
 			Author:       v.UploaderName,
 			ID:           v.ID,
